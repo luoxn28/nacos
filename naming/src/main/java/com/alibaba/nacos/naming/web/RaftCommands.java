@@ -48,6 +48,9 @@ public class RaftCommands {
     @Autowired
     protected DomainsManager domainsManager;
 
+    /**
+     * raft选举
+     */
     @NeedAuth
     @RequestMapping("/vote")
     public JSONObject vote(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -58,6 +61,9 @@ public class RaftCommands {
         return JSON.parseObject(JSON.toJSONString(peer));
     }
 
+    /**
+     * raft心跳
+     */
     @NeedAuth
     @RequestMapping("/beat")
     public JSONObject beat(HttpServletRequest request, HttpServletResponse response) throws Exception {

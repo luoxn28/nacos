@@ -582,13 +582,13 @@ public class ApiCommands {
         }
 
         if (virtualClusterDomain == null) {
-
             Lock lock = domainsManager.addLockIfAbsent(UtilsAndCommons.assembleFullServiceName(namespaceId, dom));
             Condition condition = domainsManager.addCondtion(UtilsAndCommons.assembleFullServiceName(namespaceId, dom));
             UtilsAndCommons.RAFT_PUBLISH_EXECUTOR.execute(new Runnable() {
                 @Override
                 public void run() {
                     try {
+                        // 该服务之前没注册过，开始注册Domain
                         regDom(request);
                     } catch (Exception e) {
                         Loggers.SRV_LOG.error("[REG-SERIVCE] register service failed, service:" + dom, e);
@@ -596,6 +596,7 @@ public class ApiCommands {
                 }
             });
             try {
+                // 当前线程等待服务注册完成
                 lock.lock();
                 condition.await(5000, TimeUnit.MILLISECONDS);
             } finally {
@@ -1102,6 +1103,7 @@ public class ApiCommands {
                 requestWrapper.addParameter("term", String.valueOf(RaftCore.getPeerSet().local().term));
                 requestWrapper.addParameter("timestamp", String.valueOf(timestamp));
 
+                // 更新本地数据，更新完成之后发布
                 onAddIP4Dom(requestWrapper);
 
                 proxyParams.put("clientIP", NetUtils.localServer());
@@ -1109,6 +1111,7 @@ public class ApiCommands {
                 proxyParams.put("term", String.valueOf(RaftCore.getPeerSet().local().term));
                 proxyParams.put("timestamp", String.valueOf(timestamp));
 
+                // 同步给其他peer
                 if (domain.getEnableHealthCheck() && !domain.getEnableClientBeat()) {
                     syncOnAddIP4Dom(namespaceId, dom, proxyParams);
                 } else {

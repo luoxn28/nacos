@@ -194,6 +194,7 @@ public class TcpSuperSenseProcessor extends AbstractHealthCheckProcessor impleme
                     return;
                 }
 
+                // Tcp健康检查OK
                 if (key.isValid() && key.isConnectable()) {
                     //connected
                     channel.finishConnect();
@@ -348,8 +349,12 @@ public class TcpSuperSenseProcessor extends AbstractHealthCheckProcessor impleme
         }
     }
 
+    /**
+     * 直接使用java Nio，不如使用netty来的方便安全
+     */
     private class TaskProcessor implements Callable<Void> {
 
+        // 最大等待时间500ms，感觉有点小呀
         private static final int MAX_WAIT_TIME_MILLISECONDS = 500;
         Beat beat = null;
 
@@ -376,6 +381,7 @@ public class TcpSuperSenseProcessor extends AbstractHealthCheckProcessor impleme
                         return null;
                     }
 
+                    // channel关闭
                     beatKey.key.cancel();
                     beatKey.key.channel().close();
                 }

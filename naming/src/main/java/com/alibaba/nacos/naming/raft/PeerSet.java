@@ -134,6 +134,7 @@ public class PeerSet {
             }
         }
 
+        // 最大的投票的节点获取超过半数节点的投票
         if (maxApproveCount >= majorityCount()) {
             RaftPeer peer = peers.get(maxApprovePeer);
             peer.state = RaftPeer.State.LEADER;

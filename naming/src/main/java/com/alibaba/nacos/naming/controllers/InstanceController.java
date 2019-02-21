@@ -35,12 +35,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 服务实例controller
+ *
  * @author <a href="mailto:zpf.073@gmail.com">nkorange</a>
  */
 @RestController
 @RequestMapping(UtilsAndCommons.NACOS_NAMING_CONTEXT)
 public class InstanceController extends ApiCommands {
 
+    /**
+     * 注册服务实例，路径前缀 /nacos/v1/ns/
+     */
     @RequestMapping(value = "/instance", method = RequestMethod.POST)
     public String register(HttpServletRequest request) throws Exception {
 

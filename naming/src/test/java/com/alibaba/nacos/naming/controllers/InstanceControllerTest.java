@@ -94,8 +94,8 @@ public class InstanceControllerTest extends BaseTest {
         MockHttpServletRequestBuilder builder =
                 MockMvcRequestBuilders.put("/naming/instance")
                         .param("serviceName", "nacos.test.1")
-                        .param("ip", "1.1.1.1")
-                        .param("port", "9999");
+                        .param("ip", "192.168.102.193")
+                        .param("port", "8848");
         String actualValue = mockmvc.perform(builder).andReturn().getResponse().getContentAsString();
 
         Assert.assertEquals("ok", actualValue);

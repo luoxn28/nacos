@@ -47,7 +47,7 @@ public class GlobalExecutor {
         }
     });
 
-
+    // TICK_PERIOD_MS=500
     public static void register(Runnable runnable) {
         executorService.scheduleAtFixedRate(runnable, 0, TICK_PERIOD_MS, TimeUnit.MILLISECONDS);
     }
