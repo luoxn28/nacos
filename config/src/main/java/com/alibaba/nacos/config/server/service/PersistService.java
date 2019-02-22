@@ -483,11 +483,14 @@ public class PersistService {
             public Boolean doInTransaction(TransactionStatus status) {
                 try {
                     long configId = addConfigInfoAtomic(srcIp, srcUser, configInfo, time, configAdvanceInfo);
+                    // 如果配置有tag，则插入服务tag数据
                     String configTags = configAdvanceInfo == null ? null : (String)configAdvanceInfo.get("config_tags");
                     addConfiTagsRelationAtomic(configId, configTags, configInfo.getDataId(), configInfo.getGroup(),
                         configInfo.getTenant());
+                    // 记录配置更新log
                     insertConfigHistoryAtomic(0, configInfo, srcIp, srcUser, time, "I");
                     if (notify) {
+                        // 异步通知给客户端
                         EventDispatcher.fireEvent(
                             new ConfigDataChangeEvent(false, configInfo.getDataId(), configInfo.getGroup(),
                                 configInfo.getTenant(), time.getTime()));
@@ -688,6 +691,10 @@ public class PersistService {
         try {
             addConfigInfo(srcIp, srcUser, configInfo, time, configAdvanceInfo, notify);
         } catch (DataIntegrityViolationException ive) { // 唯一性约束冲突
+            /*
+             * 如果出现唯一性约束，表示配置已存在，更新配置
+             * 使用异常来控制业务流程了，这种方式不太好呀
+             */
             updateConfigInfo(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
         }
     }
