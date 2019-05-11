@@ -213,6 +213,7 @@ public class PushService {
     }
 
     public static void domChanged(final String namespaceId, final String dom) {
+        // 如果已经包含了该dom的更新事件，则返回
         if (futureMap.containsKey(UtilsAndCommons.assembleFullServiceName(namespaceId, dom))) {
             return;
         }

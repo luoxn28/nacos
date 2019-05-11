@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -118,6 +119,12 @@ public class InstanceController extends ApiCommands {
         throw new IllegalStateException("no matched ip found!");
     }
 
+    /**
+     * 服务主动会进行心跳
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/instance/beat", method = RequestMethod.PUT)
     public JSONObject sendBeat(HttpServletRequest request) throws Exception {
         return clientBeat(request);
